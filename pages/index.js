@@ -1,10 +1,14 @@
-import styled from 'styled-components'
-import db from '../db.json'
-import Widget from '../src/components/Widget'
-import Footer from '../src/components/Footer'
-import GitHubCorner from '../src/components/GitHubCorner'
-import QuizBackground from '../src/components/QuizBackground'
-import QuizLogo from '../src/components/QuizLogo'
+import React from 'react';
+import styled from 'styled-components';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+
+import db from '../db.json';
+import Widget from '../src/components/Widget';
+import Footer from '../src/components/Footer';
+import GitHubCorner from '../src/components/GitHubCorner';
+import QuizBackground from '../src/components/QuizBackground';
+import QuizLogo from '../src/components/QuizLogo';
 
 const QuizContainer = styled.div`
   width: 100%;
@@ -18,19 +22,43 @@ const QuizContainer = styled.div`
 `;
 
 export default function Home() {
+  const router = useRouter();
+  const [name, setName] = React.useState('');
+
   return (
     <QuizBackground backgroundImage={db.bg}>
+
+      <Head>
+        <title> AluraQuiz - Unicorn </title>
+      </Head>
+
       <QuizContainer>
+        <QuizLogo />
         <Widget>
-        <Widget.Header>
-              <h1> Título Aqui </h1>
-            </Widget.Header>
+          <Widget.Header>
+            <h1> Matemática - Fundamental 1 </h1>
+          </Widget.Header>
           <Widget.Content>
-            <p> Meu parágrafo </p>
+            <form onSubmit={function (event) {
+              event.preventDefault();
+              router.push(`/quiz?name=${name}`);
+            }}
+            >
+              <input
+                onChange={function (event) {
+                  setName(event.target.value);
+                }}
+                placeholder="Escreva seu nome"
+              />
+              <button type="submit" disabled={name.length === 0}>
+                Jogar
+                {name}
+              </button>
+            </form>
           </Widget.Content>
-          
+
         </Widget>
-        
+
         <Widget>
           <Widget.Content>
             <h1> Quizes da Galera </h1>
@@ -40,8 +68,7 @@ export default function Home() {
         </Widget>
         <Footer />
       </QuizContainer>
-      <GitHubCorner projectUrl="https://github.com/vaugustineli"/>
+      <GitHubCorner projectUrl="https://github.com/vaugustineli" />
     </QuizBackground>
   );
-  
-  }
+}
